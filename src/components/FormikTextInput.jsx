@@ -7,6 +7,7 @@ import Text from './Text';
 const styles = StyleSheet.create({
   errorText: {
     marginTop: 5,
+    color: '#d73a4a'
   },
   input: {
     width: 300,
@@ -20,17 +21,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     margin: 10
   },
+  inputError: {
+    width: 300,
+    height: 40,
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderColor: '#d73a4a',
+    borderWidth: 1,
+    borderRadius: 15, 
+    fontSize: 16,
+    margin: 10
+  },
   
 });
 
 const FormikTextInput = ({ name, ...props }) => {
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
-
   return (
     <View>
       <TextInput
-        style={styles.input}
+        style={showError ? styles.inputError : styles.input}
         onChangeText={value => helpers.setValue(value)}
         onBlur={() => helpers.setTouched(true)}
         value={field.value}
