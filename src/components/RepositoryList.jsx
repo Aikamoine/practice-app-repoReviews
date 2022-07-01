@@ -57,20 +57,13 @@ const repositories = [
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-
-
 const RepositoryList = () => {
-  const renderRepo = ({ item }) => {
-    return (
-      <RepositoryItem repo={item}/>
-    )
-  }
+
   console.log(repositories)
   return (
     <FlatList
-      style={{backgroundColor: theme.colors.background}}
       data={repositories}
-      renderItem={renderRepo}
+      renderItem={({ item }) => <RepositoryItem repo={item} />}
       ItemSeparatorComponent={ItemSeparator}
       keyExtractor={item => item.id}
     />

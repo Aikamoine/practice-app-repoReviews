@@ -1,4 +1,4 @@
-import { View, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import Constants from 'expo-constants';
 import Text from './Text'
 import theme from '../theme';
@@ -19,21 +19,17 @@ const styles = StyleSheet.create({
  }
 });
 
-const handlePress = () => {
-  console.log('pressed this')
-}
-
-const AppBarTab = ({ text, handlePress, link }) => {
+const AppBarTab = ({ text, link }) => {
   return (
-    <Pressable onPress={handlePress}><Link to={link}><Text style={styles.tab}>{text}</Text></Link></Pressable>
+    <Link to={link}><Text style={styles.tab}>{text}</Text></Link>
   )
 };
 
 const AppBar = () => {
   return <View style={styles.container}>
     <ScrollView horizontal>
-      <AppBarTab text="Repositories" link="/" handlePress={handlePress} />
-      <AppBarTab text="Sign in" link="/signin" handlePress={handlePress} />
+      <AppBarTab text="Repositories" link="/"/>
+      <AppBarTab text="Sign in" link="/signin"/>
     </ScrollView>
   </View>;
 };

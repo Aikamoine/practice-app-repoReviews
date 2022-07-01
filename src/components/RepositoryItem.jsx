@@ -1,63 +1,136 @@
-import { View, Image } from "react-native"
-import React from "react"
+import { View, Image, StyleSheet } from "react-native"
 import Text from './Text'
 import theme from "../theme"
 
-const FormatNumber = ({ number }) => {
-  const numberValue = number > 1000
-    ? String(Math.round((number / 1000) * 10) / 10) + "k"
-    : number
+const round = (value, decimals = 1) => {
+  return Math.round(value * 10 ** decimals) / 10 ** decimals;
+};
+
+const formatInThousands = value => {
+  if (typeof value !== 'number') {
+    return undefined;
+  }
+
+  if (value < 1000) {
+    return value.toLocaleString();
+  }
+
+  const inThousands = round(value / 1000);
+
+  return `${inThousands.toLocaleString()}k`;
+};
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    padding: 15,
+  },
+  topContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  bottomContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  avatarContainer: {
+    flexGrow: 0,
+    marginRight: 20,
+  },
+  contentContainer: {
+    flexGrow: 1,
+    flexShrink: 1,
+  },
+  nameText: {
+    marginBottom: 5,
+  },
+  descriptionText: {
+    flexGrow: 1,
+  },
+  avatar: {
+    width: 45,
+    height: 45,
+    borderRadius: theme.roundness,
+  },
+  countItem: {
+    flexGrow: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+  },
+  countItemCount: {
+    marginBottom: 5,
+  },
+  languageContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  languageText: {
+    color: 'white',
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.roundness,
+    flexGrow: 0,
+    paddingVertical: 3,
+    paddingHorizontal: 6,
+  },
+});
+
+const CountItem = ({ label, count }) => {
   return (
-   <Text style={{fontWeight: theme.fontWeights.bold}}>{numberValue}</Text>
-  )
-}
+    <View style={styles.countItem}>
+      <Text style={styles.countItemCount} fontWeight="bold">
+        {formatInThousands(count)}
+      </Text>
+      <Text color="textSecondary">{label}</Text>
+    </View>
+  );
+};
 
 const RepositoryItem = ({ repo }) => {
-  return (
-    <View style={{ backgroundColor: 'white' }}>
-      <View style={{flexDirection: 'row', gap: 20}}>
-        <Image
-        style={{ width: 50, height: 50, borderRadius: 5 }}
-        source={{ uri: repo.ownerAvatarUrl }}
-        />
-        <View style={{flexDirection: 'column', justifyContent: 'space-between'}}>
-          <Text style={{ fontWeight: theme.fontWeights.bold }}>{repo.fullName}</Text>
-          <Text>{repo.description}</Text>
-          <Text style={{
-            backgroundColor: theme.colors.primary,
-            alignSelf: 'flex-start',
-            color: 'white',
-            borderRadius: 5,
-            padding: 5,
-            fontWeight: theme.fontWeights.bold
-          }}>
-            {repo.language}
-          </Text>
-        </View>
-        
-      </View>
-      
-      <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
-        <View style={{ flexDirection: 'column', gap:5}}>
-          <FormatNumber number={repo.stargazersCount} />
-          <Text>Stars</Text>
-        </View>
-        <View style={{ flexDirection: 'column', gap:5}}>
-          <FormatNumber number={repo.forksCount} />
-          <Text>Forks</Text>
-        </View>
-        <View style={{ flexDirection: 'column', gap:5}}>
-          <FormatNumber number={repo.reviewCount} />
-          <Text>Reviews</Text>
-        </View>
-        <View style={{ flexDirection: 'column', gap:5}}>
-          <FormatNumber number={repo.ratingAverage} />
-          <Text>Rating</Text>
-        </View>
+  const {
+    fullName,
+    description,
+    language,
+    forksCount,
+    stargazersCount,
+    ratingAverage,
+    reviewCount,
+    ownerAvatarUrl,
+  } = repo;
 
+  return (
+    <View style={styles.container}>
+      <View style={styles.topContainer}>
+        <View style={styles.avatarContainer}>
+          <Image source={{ uri: ownerAvatarUrl }} style={styles.avatar} />
+        </View>
+        <View style={styles.contentContainer}>
+          <Text
+            style={styles.nameText}
+            fontWeight="bold"
+            fontSize="subheading"
+            numberOfLines={1}
+          >
+            {fullName}
+          </Text>
+          <Text style={styles.descriptionText} color="textSecondary">
+            {description}
+          </Text>
+          {language ? (
+            <View style={styles.languageContainer}>
+              <Text style={styles.languageText}>{language}</Text>
+            </View>
+          ) : null}
+        </View>
+      </View>
+      <View style={styles.bottomContainer}>
+        <CountItem count={stargazersCount} label="Stars" />
+        <CountItem count={forksCount} label="Forks" />
+        <CountItem count={reviewCount} label="Reviews" />
+        <CountItem count={ratingAverage} label="Rating" />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default RepositoryItem
+export default RepositoryItem;
