@@ -1,21 +1,24 @@
 import FormikTextInput from './FormikTextInput';
-import { View } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 import { Formik } from 'formik';
 import * as yup from 'yup';
 import Button from './Button';
 import useSignIn from '../hooks/useSignIn';
-import { useApolloClient } from '@apollo/client';
-import useAuthStorage from '../hooks/useAuthStorage';
 import { useNavigate } from 'react-router'
 
-const SignInForm = ({ onSubmit }) => {
-  return (
-    <View>
-      <FormikTextInput name="username" placeholder="Username" />
-      <FormikTextInput name="password" placeholder="Password" secureTextEntry/>
-      <Button onPress={onSubmit}>Sign in</Button>
-    </View>  
-  );
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'white',
+    padding: 15,
+  },
+  fieldContainer: {
+    marginBottom: 15,
+  },
+});
+
+const initialValues = {
+  username: '',
+  password: '',
 };
 
 const validationSchema = yup.object().shape({
@@ -23,37 +26,46 @@ const validationSchema = yup.object().shape({
   password: yup.string().required('password is required')
 })
 
+const SignInForm = ({ onSubmit }) => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.fieldContainer}>
+        <FormikTextInput name="username" placeholder="Username" />
+      </View>
+      <View style={styles.fieldContainer}>
+        <FormikTextInput
+          name="password"
+          placeholder="Password"
+          secureTextEntry
+        />
+      </View>
+      <Button onPress={onSubmit}>Sign in</Button>
+    </View>
+  );
+};
+
+
 const SignIn = () => {
   const [signIn] = useSignIn();
-  const apolloClient = useApolloClient()
-  const authStorage = useAuthStorage()
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onSubmit = async (values) => {
-    console.log('onsubmit values', values);
     const { username, password } = values;
 
-    try {
-      const { data } = await signIn({ username, password });
-      await authStorage.setAccessToken(data.authenticate.accessToken);
-      apolloClient.resetStore();
-      console.log('token from storage', await authStorage.getAccessToken());
-      navigate('/')
-    } catch (e) {
-      console.log('error')
-      console.log(e);
-    }
+    await signIn({ username, password });
+
+    navigate('/', { replace: true });
   };
-  
+
   return (
     <Formik
-      initialValues={{ username: '', password: '' }}
+      initialValues={initialValues}
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
       {({ handleSubmit }) => <SignInForm onSubmit={handleSubmit} />}
     </Formik>
-  )
-}
+  );
+};
 
 export default SignIn;
