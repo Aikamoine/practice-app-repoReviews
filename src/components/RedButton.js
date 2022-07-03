@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
     width: 300,
     height: 40,
     textAlign: 'center',
-    backgroundColor: theme.colors.primary,
+    backgroundColor: theme.colors.error,
     borderRadius: theme.roundness,
   },
   text: {
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
   }
 });
 
-const Button = ({ children, style, ...props }) => {
+const RedButton = ({ children, style, ...props }) => {
   const buttonStyle = [styles.container, style];
 
   return (
@@ -36,4 +36,4 @@ const Button = ({ children, style, ...props }) => {
 
 
 
-export default Button
+export default RedButton

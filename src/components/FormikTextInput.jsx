@@ -12,12 +12,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const FormikTextInput = ({ name, ...props }) => {
+const FormikTextInput = ({ name, multiline, ...props }) => {
   const [field, meta, helpers] = useField(name);
   const showError = meta.touched && meta.error;
   return (
     <View>
       <TextInput
+        multiline={multiline}
         onChangeText={value => helpers.setValue(value)}
         onBlur={() => helpers.setTouched(true)}
         value={field.value}

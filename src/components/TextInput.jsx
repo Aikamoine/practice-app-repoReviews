@@ -19,14 +19,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const TextInput = ({ style, error, ...props }) => {
+const TextInput = ({ style, multiline, error, ...props }) => {
   const textInputStyle = [
     styles.input,
     error && styles.inputError,
     style,
   ];
   
-  return <NativeTextInput style={textInputStyle} {...props} />;
+  return <NativeTextInput multiline={multiline} style={textInputStyle} {...props} />;
 };
 
 export default TextInput;
